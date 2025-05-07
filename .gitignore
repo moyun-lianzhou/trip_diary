@@ -1,4 +1,5 @@
-node_moudles
+node_modules
+trip_diary_server/node_modules/
 .DS_Store
 .env
-miniprogram_npm
+trip_diary_client/miniprogram_npm
