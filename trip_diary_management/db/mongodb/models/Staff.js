@@ -35,6 +35,6 @@ const staffSchema = new mongoose.Schema({
         required: true,
         default: Date.now // 默认值为当前时间
     }
-},{collation: 'staff'})
+},{collection: 'staff'})
 
 module.exports = mongoose.model('Staff', staffSchema)
