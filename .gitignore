@@ -1,5 +1,5 @@
-node_modules
-trip_diary_server/node_modules/
-.DS_Store
-.env
 trip_diary_client/miniprogram_npm
+trip_diary_client/_MACOSX
+
+trip_diary_server/node_modules/
+
