@@ -82,13 +82,14 @@
 ```
 {
   _id: ObjectId,
-  openId: number, // 微信用户唯一标识，从微信官方获取
-  username: String, // 用户的应用名称
-  nickname: String, // 用户微信昵称
-  avatarUrl: String, // 用户头像URL
+  openid: String, // 微信用户唯一标识，从微信官方获取
+  username: String, // 用户名（用户唯一标识，用于关注功能）
+  password: String, // 加密存储（方便扩展非微信环境登录）
+  nickname: String, // 用户昵称（唯一）
+  avatarUrl: String, // 用户头像
   gender: number, // 用户性别
   tip: string, // 用户个性签名
-  phone: String, // 用户手机号码
+  phone: String, // 用户手机号码（唯一）
   createdAt: Date, // 创建用户时间
   updatedAt: Date // 用户上一次更新信息时间
 }
