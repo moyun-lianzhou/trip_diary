@@ -11,12 +11,13 @@
         <t-cell-group>
             <!-- 已登录 -->
             <t-cell wx:if="{{isLogin}}" bordered="{{false}}">
-                <t-avatar image="{{personalInfo.image}}" slot="left-icon" size="large" />
+                <t-avatar image="{{userInfo.avatarUrl}}" slot="left-icon" size="large" />
                 <view class="my-info__person" slot="description">
-                    <view class="name">{{personalInfo.name}}</view>
+                    <view class="name">{{userInfo.username}}</view>
+                    <view class="name">{{userInfo.nickname}}</view>
+                    <view class="name">{{userInfo.tip}}</view>
                     <view class="tags">
-                        <t-tag class="tag" variant="light" icon="discount">{{personalInfo.star}}</t-tag>
-                        <t-tag class="tag" variant="light" icon="location">{{personalInfo.city}}</t-tag>
+                        <t-tag class="tag" variant="light" icon="location">{{userInfo.city}}</t-tag>
                     </view>
                 </view>
                 <t-icon slot="right-icon" name="edit" size="40rpx" color="#000000e6" bindtap="onNavigateTo" />

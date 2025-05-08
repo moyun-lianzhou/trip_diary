@@ -7,7 +7,7 @@
         <t-input
           class="custom-class"
           placeholder="请输入用户名"
-          value="{{passwordInfo.username}}"
+          value="{{formInfo.username}}"
           bindchange="onAccountChange"
           tips="{{usernameTip}}"
           status="error"
@@ -19,7 +19,7 @@
         <t-input
           placeholder="请输入密码"
           type="password"
-          value="{{passwordInfo.password}}"
+          value="{{formInfo.password}}"
           bindchange="onPasswordChange"
           tips="{{passwordTip}}"
           status="error"
@@ -50,7 +50,7 @@
     </t-radio-group>
 
     <view class="login__button">
-      <t-button theme="primary" size="large" block disabled="{{!isSubmit}}" bindtap="login">
+      <t-button theme="primary" size="large" block bindtap="login">
         {{ isPasswordLogin ? '登录' : '验证并登录' }}
       </t-button>
     </view>
