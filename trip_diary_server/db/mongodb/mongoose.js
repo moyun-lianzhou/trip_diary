@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 // 替换为你的 MongoDB 连接字符串
-const mongoURI = 'mongodb://localhost:27017/trip_diary';
+const mongoURI = process.env.MONGODB_URI
+console.log(mongoURI)
 
 const connectDB = async () => {
     try {

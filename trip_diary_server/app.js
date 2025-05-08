@@ -3,7 +3,7 @@ const app = express(); // 创建Express应用
 const path = require('path'); // 引入path模块
 const logger = require('morgan'); // 引入日志中间件
 const cors = require('cors'); // 引入CORS中间件
-
+require('dotenv').config()
 
 // 引入 MongoDB 连接函数
 const connectDB = require('./db/mongodb/mongoose');
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 // 启动服务器
-const port = 3000; // 监听端口
+const port = process.env.PORT; // 监听端口
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
