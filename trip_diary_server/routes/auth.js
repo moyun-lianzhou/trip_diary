@@ -37,7 +37,7 @@ router.post('/login', async (req, res) => {
 
         // 查找或创建用户
         let user = await User.findOne({ openid });
-        console.log(user)
+        
         if (!user) {
             user = new User({
                 openid: openid,
@@ -45,6 +45,18 @@ router.post('/login', async (req, res) => {
                 password: data.password,
             });
             await user.save();
+        }else{
+            if(user.username !== data.username){
+                return res.status(401).send({
+                    code: 401,
+                    message: '用户名错误'
+                });
+            }else if(user.password !== data.password){
+                return res.status(401).send({
+                    code: 401,
+                    message: '密码错误'
+                });
+            }
         }
         // 生成 JWT Token
         const token = jwt.sign({ userId: user._id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });

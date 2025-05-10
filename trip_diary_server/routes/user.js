@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../db/mongodb/models/User');
+// 导入上传中间件
+const uploadSinglePhoto = require('../middlewares/uploadSinglePhoto'); 
 
 // 获取当前用户信息
-// 获取当前用户信息
 router.get('/info', async (req, res) => {
-    const {userId} = req.query;
+    const { userId } = req.query;
 
     if (!userId) {
         return res.status(400).send({
@@ -22,14 +23,21 @@ router.get('/info', async (req, res) => {
                 message: '未找到该用户'
             });
         }
+        const baseUrl = `http://${process.env.HOST}:${process.env.PORT}/`
+        let avatarUrl = ''
+        if(user.avatarUrl !== '/images/default_avatar.png'){
+            avatarUrl = baseUrl + `/${userId}/avatar/${user.avatarUrl}`;
+        }else{
+            avatarUrl = baseUrl + `/${user.avatarUrl}`;
+        }
         res.send({
             code: 200,
-            data:{
+            data: {
                 userInfo: {
                     username: user.username,
-                    avatarUrl: `http://${process.env.HOST}:${3000}/${user.avatarUrl}`,
-                    nickname: user.nickname, 
-                    gender: user.gender, 
+                    avatarUrl,
+                    nickname: user.nickname,
+                    gender: user.gender,
                     tip: user.tip,
                 }
             }
@@ -43,13 +51,68 @@ router.get('/info', async (req, res) => {
     }
 });
 
-// 更新用户信息
+// 更新用户信息-用户没有上传头像
 router.put('/info', async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.user._id, req.body, { new: true });
-        res.send(user);
+        const userId = req.body.userId;
+
+        const updateData = {
+            ...req.body,
+            updatedAt: Date.now(),
+            // 假设图片保存后返回的路径
+            avatarUrl: '/images/default_avatar.png'
+        };
+
+        const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
+        if (!user) {
+            return res.status(404).send({
+                code: 404,
+                message: '未找到该用户'
+            });
+        }
+        res.send({
+            code: 200,
+            data: user
+        });
     } catch (error) {
-        res.status(400).send(error);
+        console.error('更新用户信息失败:', error);
+        res.status(400).send({
+            code: 400,
+            message: '更新用户信息失败',
+            error: error.message
+        });
+    }
+});
+
+// 更新用户信息-用户上传了头像
+router.post('/info', uploadSinglePhoto.single('avatar'), async (req, res) => {
+    try {
+        console.log(req.file)
+        const userId = req.body.userId;
+        const updateData = {
+            ...req.body,
+            avatarUrl: req.file.filename, // 上传图片后的文件路径
+            updatedAt: Date.now(),
+        };
+
+        const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
+        if (!user) {
+            return res.status(404).send({
+                code: 404,
+                message: '未找到该用户'
+            });
+        }
+        res.send({
+            code: 200,
+            data: user
+        });
+    } catch (error) {
+        console.error('更新用户信息失败:', error);
+        res.status(400).send({
+            code: 400,
+            message: '更新用户信息失败',
+            error: error.message
+        });
     }
 });
 

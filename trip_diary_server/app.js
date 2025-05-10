@@ -17,6 +17,7 @@ app.use(express.json()); // 解析JSON请求体
 app.use(express.urlencoded({ extended: true })); // 解析URL编码的请求体
 app.use(express.static('public')); // 提供静态文件服务
 app.use(express.static(path.join(__dirname, 'public'))); // 静态资源路径中间件
+app.use('/', express.static(path.join(__dirname, 'upload'))); // 静态资源路径中间件-负责存储上传图片
 
 // 引入路由模块
 const authRouter = require('./routes/auth');
