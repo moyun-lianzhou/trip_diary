@@ -13,12 +13,9 @@
             <t-cell wx:if="{{isLogin}}" bordered="{{false}}">
                 <t-avatar image="{{userInfo.avatarUrl}}" slot="left-icon" size="large" />
                 <view class="my-info__person" slot="description">
-                    <view class="name">{{userInfo.username}}</view>
-                    <view class="name">{{userInfo.nickname}}</view>
-                    <view class="name">{{userInfo.tip}}</view>
-                    <view class="tags">
-                        <t-tag class="tag" variant="light" icon="location">{{userInfo.city}}</t-tag>
-                    </view>
+                    <view class="name">昵称：{{userInfo.nickname}}</view>
+                    <view>用户名：{{userInfo.username}}</view>
+                    <view>个性签名：{{userInfo.tip}}</view>
                 </view>
                 <t-icon slot="right-icon" name="edit" size="40rpx" color="#000000e6" bindtap="onNavigateTo" />
             </t-cell>

@@ -100,6 +100,12 @@ Page({
                         // 设置token
                         wx.setStorageSync('auth_token', result.data.auth_token);
                         wx.setStorageSync('userId', result.data.userInfo._id);
+                        wx.showToast({
+                            icon: 'success',
+                            duration: 1000,
+                            mask: true,
+                            title: '登录成功',
+                        })
                         setTimeout(() => {
                             wx.switchTab({
                                 url: `/pages/my/index`,
@@ -112,7 +118,14 @@ Page({
                             });
                         }, 1000);
                     } catch (error) {
-                        console.error('网络请求出错:', error);
+                        console.log('网络请求出错:', error);
+                        wx.showToast({
+                            icon: 'error',
+                            duration: 2000,
+                            mask: true,
+                            title: error.data.message,
+                        })
+                        
                     }
                 }
             })

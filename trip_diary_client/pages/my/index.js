@@ -66,7 +66,6 @@ Page({
     },
     async getUserInfo() {
         const userId = wx.getStorageSync('userId')
-        console.log(userId)
         const userInfo = await request('/user/info', 'GET', {
             userId
         }).then((res) => res.data.userInfo);
@@ -89,8 +88,7 @@ Page({
                         nickname: res.nickname,
                         avatarUrl: res.avatarUrl,
                         tip: res.tip,
-                        gender: res.gender,
-                        city: '未知'
+                        gender: res.gender
                     }
                 })
             })
