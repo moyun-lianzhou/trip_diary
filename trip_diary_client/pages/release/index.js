@@ -1,7 +1,8 @@
 // pages/release/index.js
 import {
     getImageDimension
-} from "../../utils/getImageDimension"
+} from "~/utils/getImageDimension"
+import request from '~/api/request';
 Page({
     /**
      * 页面的初始数据
@@ -14,7 +15,7 @@ Page({
             tags: [],
         },
         originFiles: [
-            
+
         ],
         // 图片布局
         gridConfig: {
@@ -34,7 +35,6 @@ Page({
             "diary.content": e.detail.value,
         });
     },
-    //   上传图片回调
     handleSuccess(e) {
         const {
             files
@@ -43,7 +43,6 @@ Page({
             originFiles: files,
         });
     },
-    //   移除图片成功回调
     handleRemove(e) {
         const {
             index
@@ -55,6 +54,9 @@ Page({
         this.setData({
             originFiles,
         });
+    },
+    handleClick(e) {
+        console.log(e.detail.file);
     },
     // 获取当前位置
     gotoMap() {
@@ -77,67 +79,84 @@ Page({
     },
 
     // 发布
-    release() {
-        console.log(this.data.diary);
-        // wx.showLoading({
-        //     title: "发布中...",
-        //     mask: true,
-        // });
-
-        // 获取表单数据
-        const formData = {
-            title: "游记标题", // 需要替换为实际获取的标题
-            content: "游记内容", // 需要替换为实际获取的内容
-            images: Promise.all(this.data.originFiles.map(async (file) => {
-                const dimensions = await getImageDimension(file.url);
-                return {
-                    url: file.url,
-                    width: dimensions.width,
-                    height: dimensions.height
-                };
-            })),
-            tags: this.data.tags,
-        };
-
-        console.log(formData)
-        return
-        // 调用API发布游记
-        wx.request({
-            url: "http://localhost:3000/api/diary",
-            method: "POST",
-            data: formData,
-            success: (res) => {
-                wx.hideLoading();
-                if (res.statusCode === 201) {
-                    wx.showToast({
-                        title: "发布成功",
-                        icon: "success",
-                        duration: 2000,
-                    });
-                    setTimeout(() => {
-                        wx.reLaunch({
-                            url: "/pages/home/index?oper=release",
-                        });
-                    }, 2000);
-                } else {
-                    wx.showToast({
-                        title: "发布失败: " + res.data.message,
-                        icon: "none",
-                        duration: 3000,
-                    });
-                }
-            },
-            fail: (err) => {
-                wx.hideLoading();
-                wx.showToast({
-                    title: "网络错误，请重试",
-                    icon: "none",
-                    duration: 3000,
-                });
-            },
+    async release() {
+        wx.showLoading({
+            title: "发布中...",
+            mask: true,
         });
-        // wx.reLaunch({
-        //   url: `/pages/home/index?oper=release`,
-        // });
+
+        // 加入图片宽高
+        const originFiles = await Promise.all(this.data.originFiles.map(async (file) => {
+            const dimension = await getImageDimension(file.url);
+            return {
+                file,
+                width: dimension.width,
+                height: dimension.height
+            };
+        }))
+
+        try {
+            const userId = wx.getStorageSync('userId')
+            // 1. 上传所有图片
+            const uploadResults = await Promise.all(
+                originFiles.map(fileObj =>
+                    new Promise((resolve, reject) => {
+                        wx.uploadFile({
+                            url: 'http://localhost:3000/api/diary/upload',
+                            filePath: fileObj.file.url,
+                            name: 'photos',
+                            formData: {
+                                userId: userId,
+                                width: fileObj.width,
+                                height: fileObj.height
+                            },
+                            success: (res) => {
+                                try {
+                                    const data = res.data ? JSON.parse(res.data) : null;
+                                    resolve(data);
+                                } catch (e) {
+                                    reject(e);
+                                }
+                            },
+                            fail: reject
+                        });
+                    })
+                )
+            );
+
+            console.log('返回', uploadResults)
+            // 2. 提交表单数据
+            const formData = {
+                userId,
+                title: this.data.diary.title,
+                content: this.data.diary.content,
+                images: uploadResults,
+                tags: this.data.tags
+            };
+            console.log('sb2')
+            console.log('formData', formData)
+
+            await request('/diary/create', 'POST', formData);
+
+            wx.hideLoading();
+            
+                wx.showToast({
+                    title: "发布成功",
+                    icon: "success"
+                });
+
+                setTimeout(() => wx.reLaunch({
+                    url: "/pages/home/index"
+                }), 2000);
+           
+        } catch (err) {
+            console.log(err)
+            wx.hideLoading();
+            wx.showToast({
+                title: "发布失败，已回滚",
+                icon: "none"
+            });
+            // 这里可以添加失败后的清理逻辑
+        }
     },
 });

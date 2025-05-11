@@ -1,12 +1,27 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Diary = require('../db/mongodb/models/Diary');
 const uploadManyPhoto = require('../middlewares/uploadManyPhoto'); // 导入上传中间件
 
 // 获取所有人审核通过的游记列表（可分页、搜索）
 router.get('/', async (req, res) => {
     try {
+        console.log('Current env:', {
+            PROTOCOL: process.env.PROTOCOL,
+            HOST: process.env.HOST,
+            PORT: process.env.PORT,
+            BASE_URL: process.env.BASE_URL
+          });
+        console.log(process.env.BASE_URL)
         const diaries = await Diary.find({ status: 1, isDeleted: false });
+        diaries.forEach(diary => {
+            const authorId = diary.authorId;
+            diary.images = diary.images.map(image => {
+                image.url = `${process.env.BASE_URL}/${authorId}/diary_photos/${image.url}`; // 假设图片存储在 `public/imag`
+                return image;
+            });
+        });
         res.send({
             code: 200,
             data: {
@@ -37,16 +52,50 @@ router.get('/me', async (req, res) => {
     res.send('当前用户的游记');
 });
 
+// 上传游记图片
+router.post('/upload', uploadManyPhoto.array('photos', 20), async (req, res) => {
+    try {
+       
+        const {width, height} = req.body;
+        const files = req.files;
+        console.log(width, height)
+        const images = {
+            url: files[0].filename,
+            width: width,
+            height: height
+        };
+        console.log(images)
+        res.send(images);
+    }catch (error) {
+        res.status(500).send(error);
+    }
+})
+
 // 创建游记
 router.post('/create', uploadManyPhoto.array('photos', 20),async (req, res) => {
-    if (!req.files || req.files.length === 0){
-        return res.status(401).send({
-            code: 401,
-            message: '没有照片上传'
+    try {
+        const { images, title, content, userId, tags } = req.body;
+        const diary = new Diary({
+            authorId: userId,
+            title,
+            content,
+            images,
+            // tags: JSON.parse(tags),
+            status: 1
         });
-    }
 
-    let { photoMeta } = req.body;
+        await diary.save();
+        res.status(200).json({ code: 200, data: diary });
+    } catch (err) {
+        // 回滚已上传的文件
+        if(req.files?.length > 0) {
+            req.files.forEach(file => {
+                fs.unlinkSync(file.path);
+            });
+        }
+        
+        res.status(500).json({ code: 500, message: err.message });
+    }
 
 
     // try {

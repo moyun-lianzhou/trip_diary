@@ -3,7 +3,11 @@ const app = express(); // 创建Express应用
 const path = require('path'); // 引入path模块
 const logger = require('morgan'); // 引入日志中间件
 const cors = require('cors'); // 引入CORS中间件
-require('dotenv').config()
+const dotenv = require('dotenv');
+const dotenvExpand = require('dotenv-expand');
+
+// 加载并扩展环境变量
+dotenvExpand.expand(dotenv.config());
 
 // 引入 MongoDB 连接函数
 const connectDB = require('./db/mongodb/mongoose');

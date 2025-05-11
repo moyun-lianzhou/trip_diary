@@ -1,111 +1,68 @@
 // import Message from 'tdesign-miniprogram/message/index';
-import request from '~/api/request';
+import request from "~/api/request";
 
 Page({
     data: {
         enable: false,
-        diaryList1: [],
-        diaryList: [
-            // {
-            //     url: '/static/home/card0.png',
-            //     desc: '少年,星空与梦想',
-            //     tags: [{
-            //             text: 'AI绘画',
-            //             theme: 'primary',
-            //         },
-            //         {
-            //             text: '版权素材',
-            //             theme: 'success',
-            //         },
-            //     ],
-            // },
-            // {
-            //     url: '/static/home/card1.png',
-            //     desc: '仰望星空的少女',
-            //     tags: [{
-            //             text: 'AI绘画',
-            //             theme: 'primary',
-            //         },
-            //         {
-            //             text: '版权素材',
-            //             theme: 'success',
-            //         },
-            //     ],
-            // },
-            // {
-            //     url: '/static/home/card3.png',
-            //     desc: '仰望星空的少年',
-            //     tags: [{
-            //             text: 'AI绘画',
-            //             theme: 'primary',
-            //         },
-            //         {
-            //             text: '版权素材',
-            //             theme: 'success',
-            //         },
-            //     ],
-            // },
-            // {
-            //     url: '/static/home/card2.png',
-            //     desc: '少年,星空与梦想',
-            //     tags: [{
-            //             text: 'AI绘画',
-            //             theme: 'primary',
-            //         },
-            //         {
-            //             text: '版权素材',
-            //             theme: 'success',
-            //         },
-            //     ],
-            // },
-            // {
-            //     url: '/static/home/card4.png',
-            //     desc: '多彩的天空',
-            //     tags: [{
-            //             text: 'AI绘画',
-            //             theme: 'primary',
-            //         },
-            //         {
-            //             text: '版权素材',
-            //             theme: 'success',
-            //         },
-            //     ],
-            // },
-        ],
-        // 发布
-        motto: 'Hello World',
+        diaryList: [],
+        motto: "Hello World",
+        leftColumnData: [],
+        rightColumnData: []
     },
     // 生命周期
-    async onReady() {
-
-    },
+    async onReady() {},
     async initInfo() {
         try {
-            const {
-                diaries
-            } = await request('/diary', 'GET')
+            const { diaries } = await request("/diary", "GET");
             for (const item of diaries) {
-                console.log(item)
-                const {
-                    userInfo
-                } = await request('/user/info', 'GET', {
-                    userId: item.authorId
+                console.log(item);
+                const { userInfo } = await request("/user/info", "GET", {
+                    userId: item.authorId,
                 });
-                item.userInfo = userInfo
+                item.userInfo = userInfo;
             }
             this.setData({
-                diaryList1: diaries
-            })
-        } catch {
-
+                diaryList: diaries,
+            });
+        } catch (err) {
+            console.log(err);
         }
+        console.log(this.data.diaryList);
 
-        // console.log(res)
-
-
+        this.fetchData()
+    },
+    fetchData() {
+        // 模拟数据获取
+        const allData = this.data.diaryList; // 你的数据
+        
+        // 分列逻辑
+        const left = [];
+        const right = [];
+        let leftHeight = 0;
+        let rightHeight = 0;
+        
+        allData.forEach(item => {
+            const width = item.images[0].width
+            const height = item.images[0].height
+            // 根据图片高度决定放入哪一列
+            if (leftHeight <= rightHeight) {
+                left.push(item);
+                leftHeight += 340/(width/height) + 16;
+            } else {
+                right.push(item);
+                rightHeight += 340/(width/height) + 16;
+            }
+        });
+        
+        this.setData({
+            leftColumnData: left,
+            rightColumnData: right
+        });
+        console.log('left', this.data.leftColumnData)
+        console.log('right', this.data.rightColumnData)
     },
     onLoad(option) {
-        this.initInfo()
+        this.initInfo();
         // if (option.oper) {
         //   let content = '';
         //   if (option.oper === 'release') {
@@ -119,9 +76,7 @@ Page({
     onRefresh() {
         // this.refresh();
     },
-    async refresh() {
-
-    },
+    async refresh() {},
     showOperMsg(content) {
         Message.success({
             context: this,
@@ -132,7 +87,7 @@ Page({
     },
     goRelease() {
         wx.navigateTo({
-            url: '/pages/release/index',
+            url: "/pages/release/index",
         });
     },
 });

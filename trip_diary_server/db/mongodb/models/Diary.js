@@ -9,10 +9,11 @@ const diarySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    images: { // 图片URL数组
-        type: [String], // 数组类型，每个元素都是字符串类型的URL
-        required: true, 
-    },
+    images: [{ // 修改为对象数组
+        url: String, // 图片URL
+        width: Number, // 图片宽度
+        height: Number, // 图片高度
+    }],
     video: String, // 视频URL
     authorId: { // 作者ID（关联User表）
         type: mongoose.Schema.Types.ObjectId, // 关联User表的ObjectId
@@ -26,11 +27,7 @@ const diarySchema = new mongoose.Schema({
     },
     checkedName:  String, // 字符串类型的姓名，仅当状态为1或2时存在
     rejectReason: String,// 拒绝原因（仅当状态为2时存在）
-    checkedAt: { // 审核时间
-        type: Date, // 日期类型
-        required: true, 
-        default: Date.now // 默认值为当前时间
-    },
+    checkedAt:  Date, // 审核时间
     isDeleted: { // 是否删除，0为未删除，1为已删除
         type: Number, // 数字类型，0或1
         required: true, 
