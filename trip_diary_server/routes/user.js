@@ -59,8 +59,6 @@ router.put('/info', async (req, res) => {
         const updateData = {
             ...req.body,
             updatedAt: Date.now(),
-            // 假设图片保存后返回的路径
-            avatarUrl: '/images/default_avatar.png'
         };
 
         const user = await User.findByIdAndUpdate(userId, updateData, { new: true });

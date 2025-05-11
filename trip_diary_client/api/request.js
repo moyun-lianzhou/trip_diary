@@ -17,7 +17,6 @@ function request(url, method = 'GET', data = {}) {
     }
 
     return new Promise((resolve, reject) => {
-        console.log('request', url, method, data)
         wx.request({
             url: baseUrl + url,
             method,
@@ -27,10 +26,11 @@ function request(url, method = 'GET', data = {}) {
             success(res) {
                 // HTTP状态码为200才视为成功
                 if (res.statusCode === 200) {
-                    resolve(res.data);
+                    // console.log(res.data)
+                    resolve(res.data.data);
                 } else {
                     // wx.request的特性，只要有响应就会走success回调，所以在这里判断状态，非200的均视为请求失败
-                    reject(res);
+                    reject(res)
                 }
             },
             fail(err) {

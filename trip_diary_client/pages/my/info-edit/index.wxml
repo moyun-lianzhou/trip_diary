@@ -34,7 +34,7 @@
     </t-cell>
 
     <t-cell class="info-edit__cell" title="个性签名">
-        <t-textarea bind:blur="onTipChange" disableDefaultPadding="{{true}}" indicator maxcharacter="50" placeholder="请输入个性签名" slot="note" t-class="info-edit__tip" value="{{userInfo.introduction}}" />
+        <t-textarea bind:blur="onTipChange" disableDefaultPadding="{{true}}" indicator maxcharacter="50" placeholder="请输入个性签名" slot="note" t-class="info-edit__tip" value="{{userInfo.tip}}" />
     </t-cell>
 
 </view>

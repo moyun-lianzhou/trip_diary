@@ -98,8 +98,8 @@ Page({
                     try {
                         const result = await request('/auth/login', 'POST', { data: this.data.formInfo, code: res.code });
                         // 设置token
-                        wx.setStorageSync('auth_token', result.data.auth_token);
-                        wx.setStorageSync('userId', result.data.userInfo._id);
+                        wx.setStorageSync('auth_token', result.auth_token);
+                        wx.setStorageSync('userId', result.userInfo._id);
                         wx.showToast({
                             icon: 'success',
                             duration: 1000,

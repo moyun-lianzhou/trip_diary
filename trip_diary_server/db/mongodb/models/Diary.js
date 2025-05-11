@@ -13,10 +13,7 @@ const diarySchema = new mongoose.Schema({
         type: [String], // 数组类型，每个元素都是字符串类型的URL
         required: true, 
     },
-    video: { // 视频URL
-        type: String, // 字符串类型的URL
-        required: true, 
-    },
+    video: String, // 视频URL
     authorId: { // 作者ID（关联User表）
         type: mongoose.Schema.Types.ObjectId, // 关联User表的ObjectId
         ref: 'User', // 关联的模型名称为User
@@ -27,20 +24,12 @@ const diarySchema = new mongoose.Schema({
         required: true, 
         default: 0 // 默认值为0
     },
-    checkedName: { // 审核人姓名（关联Staff表）
-        type: String, // 字符串类型的姓名
-        required: true, 
-        default: '' // 默认值为空字符串
-    },
+    checkedName:  String, // 字符串类型的姓名，仅当状态为1或2时存在
+    rejectReason: String,// 拒绝原因（仅当状态为2时存在）
     checkedAt: { // 审核时间
         type: Date, // 日期类型
         required: true, 
         default: Date.now // 默认值为当前时间
-    },
-    rejectReason: { // 拒绝原因（仅当状态为2时存在）
-        type: String, 
-        required: true, 
-        default: '' // 默认值为空字符串
     },
     isDeleted: { // 是否删除，0为未删除，1为已删除
         type: Number, // 数字类型，0或1

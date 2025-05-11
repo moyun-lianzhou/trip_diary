@@ -57,18 +57,12 @@ Page({
         ],
     },
     onChooseAvatar(e) {
-        const {
-            avatarUrl
-        } = e.detail
-        this.setData({
-            avatarUrl,
-        })
+        const {avatarUrl} = e.detail
+        this.setData({avatarUrl})
     },
     async getUserInfo() {
         const userId = wx.getStorageSync('userId')
-        const userInfo = await request('/user/info', 'GET', {
-            userId
-        }).then((res) => res.data.userInfo);
+        const userInfo = await request('/user/info', 'GET', {userId}).then((res) => res.userInfo);
         return userInfo
     },
     onLoad() {

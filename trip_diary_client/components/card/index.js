@@ -1,8 +1,10 @@
 Component({
   properties: {
     url: String,
-    desc: String,
+    title: String,
     tags: Array,
+    avatarUrl: String,
+    nickname: String,
   },
   data: {},
   methods: {},
