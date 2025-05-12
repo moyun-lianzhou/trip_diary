@@ -1,4 +1,8 @@
-<nav nav-type="search" />
+<nav 
+    nav-type="search" 
+    bind:searchComplete="handleSearchComplete"
+    bind:actionHandle="resetData"
+/>
 <view class="home-container">
     <view class="home-content">
         <t-tabs defaultValue="recommend">
@@ -47,6 +51,13 @@
         </t-tabs>
     </view>
 </view>
+
+<!-- 加载时文字 -->
+<view class="bomTxt">
+    <view hidden="{{!loading}}">正在加载...</view>
+    <view hidden="{{!loaded}}">已加载全部</view>
+</view>
+
 
 <view class="home-release">
     <t-button

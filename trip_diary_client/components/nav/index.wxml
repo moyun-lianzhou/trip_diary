@@ -4,10 +4,16 @@
       <view class="home-navbar__left">
         <t-icon class="home-navbar__icon" bind:tap="openDrawer" name="view-list" size="48rpx" />
         <t-search
-          shape="round"
-          placeholder="请搜索你想要的内容"
-          bindtap="searchTurn"
-          wx:if="{{navType === 'search'}}"
+        shape="round"
+        value="{{value}}"
+        center
+        placeholder="游记名称或作者昵称"
+        action="{{actionText}}"
+        bind:blur="blurHandle"
+        bind:focus="focusHandle"
+        bind:action-click="actionHandle"
+        bind:change="changeHandle"
+        bind:submit="handleSubmit"
         />
       </view>
     </view>

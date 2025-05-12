@@ -18,28 +18,28 @@ Page({
         isLogin: false,
         personalInfo: {},
         gridList: [{
-                name: '全部发布',
+                name: '全部游记',
                 icon: 'root-list',
                 type: 'all',
-                url: '',
+                status: 3
             },
             {
                 name: '审核中',
                 icon: 'search',
                 type: 'progress',
-                url: '',
+                status: 0
             },
             {
                 name: '已发布',
                 icon: 'upload',
                 type: 'published',
-                url: '',
+                status: 1
             },
             {
                 name: '已拒绝',
                 icon: 'file-copy',
                 type: 'draft',
-                url: '',
+                status: 2
             },
         ],
 
@@ -102,11 +102,9 @@ Page({
     },
 
     onEleClick(e) {
-        const {
-            name,
-            url
-        } = e.currentTarget.dataset.data;
-        if (url) return;
-        this.onShowToast('#t-toast', name);
+        const {status} = e.currentTarget.dataset.data;
+        wx.navigateTo({
+          url: `/pages/myDiary/index?status=${status}`,
+        })
     },
 });

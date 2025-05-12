@@ -1,0 +1,35 @@
+<!-- <t-navbar title="所有游记" left-arrow /> -->
+<t-navbar t-class-placeholder="t-navbar-placeholder" t-class-content="t-navbar-content" left-arrow>
+  <view slot="left" class="custom-title">所有游记</view>
+  <view slot="left" class="custom-title" style="color: sky;margin-left: 200rpx;color: #1D7DFC;" bind:tap="goRelease">+去发布</view>
+</t-navbar>
+<!-- add-circle -->
+<view class="container">
+  <block wx:for="{{diaryList}}" wx:key="_id">
+    <view class="diary-item">
+      <image class="diary-image" src="{{item.images[0].url}}" mode="aspectFill" />
+      <view class="diary-content">
+        <view class="text-content">
+            <view style="display: flex;flex-direction: column;">
+                <text class="diary-title" catchtap="onTitleTap">{{item.title}}</text>
+                <text class="diary-description" catchtap="onDescTap" number-of-lines="3">{{item.content}}</text>
+                <text class="diary-description" catchtap="onDescTap" number-of-lines="3">{{item.rejectReason}}</text>
+            </view>
+        </view>
+        <view class="action-bar">
+          <view class="status {{item.status === 0 ? 'status-pending' : (item.status === 1 ? 'status-approved' : 'status-rejected')}}">
+            {{item.status === 0 ? '待审核' : (item.status === 1 ? '已通过' : '已拒绝')}}
+          </view>
+          <view class="button-group">
+            <button class="btn-delete" bindtap="deleteDiary" data-id="{{item._id}}">删除</button>
+            <button class="btn-edit" 
+            bindtap="editDiary" 
+            data-id="{{item._id}}" 
+            wx:if="{{item.status !== 1}}"
+            >编辑</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

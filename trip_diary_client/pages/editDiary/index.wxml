@@ -1,0 +1,64 @@
+<t-navbar title="编辑游记" left-arrow />
+
+<view class="page">
+    <view class="release-container">
+        <view class="upload box">
+            <t-upload
+                disabled
+                t-class="upload-class"
+                media-type="{{['video','image']}}"
+                files="{{originFiles}}"
+                gridConfig="{{gridConfig}}"
+                removeBtn="{{false}}"
+                bind:success="handleSuccess"
+                bind:remove="handleRemove"
+                bind:click="handleClick"
+                bind:sort-end="handleSortEnd"
+                max="{{originFiles.length}}" />
+        </view>
+        <!-- 新增标题输入框 -->
+        <view class="title box separator" >
+            <t-input
+                placeholder="请输入游记标题"
+                maxlength="20"
+                clearable
+                borderless
+                value="{{diary.title}}"
+                bind:change="TitleChange" >
+                <view slot="label" class="custom-label"> 游记标题 </view>
+            </t-input>
+        </view>
+
+        <view class="desc box separator">
+            
+            <t-textarea
+                t-class="desc-class"
+                t-class-textarea="placeholder-class"
+                value="{{diary.content}}"
+                placeholder="分享你此刻的想法"
+                maxlength="500"
+                disableDefaultPadding="{{true}}"
+                bind:change="ContentChange"
+                indicator >
+                <view slot="label" class="custom-label">游记内容</view>
+            </t-textarea>
+        </view>
+       
+        <view class="btngroup box">
+            <t-button
+                t-class="btn-class"
+                theme="light"
+                icon="file-copy"
+                content="取消编辑"
+                size="large"
+                bindtap="saveDraft"></t-button>
+            <t-button
+                t-class="btn-class"
+                theme="primary"
+                icon="upload"
+                content="编辑"
+                size="large"
+                bindtap="editDiary"></t-button>
+        </view>
+    </view>
+</view>

@@ -10,5 +10,6 @@
     "t-button": "tdesign-miniprogram/button/button",
     "nav": "/components/nav",
     "card": "/components/card"
-  }
+  },
+  "enablePullDownRefresh": true
 }

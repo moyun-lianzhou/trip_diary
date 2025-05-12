@@ -1,3 +1,5 @@
+import request from "~/api/request";
+
 Component({
   options: {
     styleIsolation: 'shared',
@@ -10,6 +12,9 @@ Component({
     titleText: String,
   },
   data: {
+    value: '',
+    actionText: '',
+    keyWord:'',
     visible: false,
     sidebar: [
       {
@@ -101,9 +106,59 @@ Component({
     },
 
     searchTurn() {
-      wx.navigateTo({
-        url: `/pages/search/index`,
-      });
+        console.log('聚焦')
+      },
+      onChangeValue(e){
+        this.setData({searchWord:e.detail.value})
+        console.log(this.data.searchWord)
     },
+
+
+
+    changeHandle(e) {
+        const { value } = e.detail;
+        this.setData({keyWord:value});
+      },
+  
+      focusHandle() {
+        console.log('sb2')
+        this.setData({
+          actionText: '取消',
+        });
+      },
+  
+      blurHandle() {
+        console.log('sb1')
+        this.setData({
+          actionText: '',
+        });
+      },
+  
+      actionHandle() {
+          console.log('sb')
+        this.setData({
+          value: '',
+          actionText: '',
+        });
+      },
+      async handleSubmit(){
+          console.log('提交', this.data.keyWord)
+          const keyWord = this.data.keyWord
+          const {diaries, total} = await request('/diary/search', 'GET',{keyWord})
+          if(!total){
+              wx.showToast({
+                title: '无相关游记',
+                icon:'error'
+              })
+          }
+          // 触发自定义事件传递数据
+          this.triggerEvent('searchComplete', { diaries })
+          console.log(diaries)
+      }
+    // searchTurn() {
+    //   wx.navigateTo({
+    //     url: `/pages/search/index`,
+    //   });
+    // },
   },
 });

@@ -1,35 +1,70 @@
-// import Message from 'tdesign-miniprogram/message/index';
+
 import request from "~/api/request";
 
 Page({
     data: {
-        enable: false,
         diaryList: [],
-        motto: "Hello World",
         leftColumnData: [],
-        rightColumnData: []
+        rightColumnData: [],
+        isSearchMode: false,
+        currentPage: 0,
+        pageSize: 6,
+        totalPages: 0,
+        loading: false, //是否展示 “正在加载” 字样
+        loaded: false //是否展示 “已加载全部” 字样
     },
     // 生命周期
     async onReady() {},
+    hasData(){
+        return this.data.totalPages < this.data.currentPage ? false : true
+    },
+    // 初始化方法
     async initInfo() {
         try {
-            const { diaries } = await request("/diary", "GET");
-            for (const item of diaries) {
-                console.log(item);
-                const { userInfo } = await request("/user/info", "GET", {
-                    userId: item.authorId,
-                });
-                item.userInfo = userInfo;
-            }
-            this.setData({
-                diaryList: diaries,
+            const {pages,currentPage, diaries}= await request("/diary/page", "GET", {
+                currentPage: this.data.currentPage + 1,
+                limit: this.data.pageSize
             });
+            this.setData({
+                diaryList: [...this.data.diaryList, ...diaries],
+                totalPages: pages,
+                currentPage,
+                loading: false,
+            });
+
+            //如果列表数据条数小于总条数，隐藏 “正在加载” 字样，显示 “已加载全部” 字样
+            if (diaries.length < this.data.pageSize) {
+                this.setData({
+                    loading: false,
+                    loaded: true,
+                });
+            }
+            
+            this.fetchData(); // 瀑布流
         } catch (err) {
             console.log(err);
         }
-        console.log(this.data.diaryList);
+    },
+    // 新增上拉加载处理
+    onReachBottom() {
+        console.log('上拉加载')
+        if(!this.hasData()){
+            console.log('数据加载完毕')
+            this.setData({
+                loading: false, //加载中
+                loaded: true //是否加载完所有数据
+            });
+            return
+        }
 
-        this.fetchData()
+        this.setData({
+            loading: true, //加载中
+            loaded: false //是否加载完所有数据
+        });
+        //延时调用接口
+        setTimeout(()=> {
+            this.initInfo();
+        }, 500)
     },
     fetchData() {
         // 模拟数据获取
@@ -61,33 +96,29 @@ Page({
         console.log('left', this.data.leftColumnData)
         console.log('right', this.data.rightColumnData)
     },
-    onLoad(option) {
+    onLoad() {
         this.initInfo();
-        // if (option.oper) {
-        //   let content = '';
-        //   if (option.oper === 'release') {
-        //     content = '发布成功';
-        //   } else if (option.oper === 'save') {
-        //     content = '保存成功';
-        //   }
-        //   this.showOperMsg(content);
-        // }
     },
     onRefresh() {
-        // this.refresh();
-    },
-    async refresh() {},
-    showOperMsg(content) {
-        Message.success({
-            context: this,
-            offset: [120, 32],
-            duration: 4000,
-            content,
-        });
+        
     },
     goRelease() {
         wx.navigateTo({
             url: "/pages/release/index",
         });
+    },
+    // 新增处理搜索完成的方法
+    handleSearchComplete(e) {
+        const diaries = e.detail.diaries;
+        this.setData({
+            diaryList: diaries,
+            isSearchMode: true
+        });
+        this.fetchData(); // 调用现有方法刷新视图
+    },
+     // 恢复原始数据的方法
+     resetData() {
+        this.initInfo();
+        this.setData({ isSearchMode: false });
     },
 });

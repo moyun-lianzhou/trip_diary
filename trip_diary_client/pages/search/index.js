@@ -2,8 +2,15 @@ import request from '~/api/request';
 
 Page({
   data: {
-    historyWords: [],
-    popularWords: [],
+    historyWords: ['AI绘画', 'Stable Diffusion', '版权素材', '星空', 'illustration', '原创'],
+    popularWords: [
+        '考研和靠边同时上岸应该怎么选？有哪些参考建议',
+        '日常饮食中，如何选择优质蛋白',
+        '你有没有网购维权成功的经历？求分享经验',
+        '夏季带孩子旅游，你的必备物品有哪些',
+        '在海外越卖越贵，中国汽车做对了什么',
+        '当HR问你离职原因，怎么回答最能被接受',
+      ],
     searchValue: '',
     dialog: {
       title: '确认删除当前历史记录',
@@ -26,16 +33,16 @@ Page({
    * @returns {Promise<void>}
    */
   async queryHistory() {
-    request('/api/searchHistory').then((res) => {
-      const { code, data } = res;
+    // request('/api/searchHistory').then((res) => {
+    //   const { code, data } = res;
 
-      if (code === 200) {
-        const { historyWords = [] } = data;
-        this.setData({
-          historyWords,
-        });
-      }
-    });
+    //   if (code === 200) {
+    //     const { historyWords = [] } = data;
+    //     this.setData({
+    //       historyWords,
+    //     });
+    //   }
+    // });
   },
 
   /**
@@ -43,16 +50,16 @@ Page({
    * @returns {Promise<void>}
    */
   async queryPopular() {
-    request('/api/searchPopular').then((res) => {
-      const { code, data } = res;
+    // request('/api/searchPopular').then((res) => {
+    //   const { code, data } = res;
 
-      if (code === 200) {
-        const { popularWords = [] } = data;
-        this.setData({
-          popularWords,
-        });
-      }
-    });
+    //   if (code === 200) {
+    //     const { popularWords = [] } = data;
+    //     this.setData({
+    //       popularWords,
+    //     });
+    //   }
+    // });
   },
 
   setHistoryWords(searchValue) {

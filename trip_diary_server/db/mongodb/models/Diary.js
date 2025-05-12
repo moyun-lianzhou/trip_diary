@@ -25,7 +25,10 @@ const diarySchema = new mongoose.Schema({
         required: true, 
         default: 0 // 默认值为0
     },
-    checkedName:  String, // 字符串类型的姓名，仅当状态为1或2时存在
+    checkerId: { // 审核人ID（关联Staff表），仅当状态为1或2时存在
+        type: mongoose.Schema.Types.ObjectId, // 关联Staff表的ObjectId
+        ref: 'Staff', // 关联的模型名称为Staff
+    },
     rejectReason: String,// 拒绝原因（仅当状态为2时存在）
     checkedAt:  Date, // 审核时间
     isDeleted: { // 是否删除，0为未删除，1为已删除
