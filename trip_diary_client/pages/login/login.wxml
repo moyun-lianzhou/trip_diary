@@ -1,89 +1,153 @@
 <t-navbar left-arrow />
 <view class="page login">
-  <view class="login__title"> 欢迎登录旅游日记</view>
-  <view class="login__content">
-    <view class="login__input">
-      <view class="login__password" wx:if="{{isPasswordLogin}}">
-        <t-input
-          class="custom-class"
-          placeholder="请输入用户名"
-          value="{{formInfo.username}}"
-          bindchange="onAccountChange"
-          tips="{{usernameTip}}"
-          status="error"
-          clearable
-        >
-        <view slot="label" class="custom-label"> 用户名</view>
-        </t-input>
+    <view class="login__title">
+        欢迎<text>{{isLogin ? '登录': '注册'}}</text>旅游日记</view
+    >
 
-        <t-input
-          placeholder="请输入密码"
-          type="password"
-          value="{{formInfo.password}}"
-          bindchange="onPasswordChange"
-          tips="{{passwordTip}}"
-          status="error"
-          clearable
-        >
-        <view slot="label" class="custom-label"> {{passwordText}}</view>
-        </t-input>
-      </view>
+    <view class="login__content">
+        <!-- 登录 -->
+        <view class="login__input">
+            <view class="login__password" wx:if="{{isLogin}}">
+                <t-input
+                    class="custom-class"
+                    placeholder="请输入用户名"
+                    value="{{formInfo.username}}"
+                    bindchange="onAccountChange"
+                    tips="{{usernameTip}}"
+                    status="error"
+                    clearable>
+                    <view slot="label" class="custom-label"> 用户名</view>
+                </t-input>
 
-      <t-input wx:else value="{{phoneNumber}}" placeholder="请输入手机号" type="number" bindchange="onPhoneInput">
-        <view slot="label" class="input-label">
-          <text>+86</text>
-          <t-icon name="caret-down-small" size="40rpx" class="input-iconl"></t-icon>
+                <t-input
+                    placeholder="请输入密码"
+                    type="password"
+                    value="{{formInfo.password}}"
+                    bindchange="onPasswordChange"
+                    tips="{{passwordTip}}"
+                    status="error"
+                    clearable>
+                    <view slot="label" class="custom-label">
+                        {{passwordText1}}</view
+                    >
+                </t-input>
+            </view>
+
+            <!-- 注册 -->
+            <view class="login__password" wx:else>
+                <t-input
+                    class="custom-class"
+                    placeholder="请输入用户名"
+                    value="{{formInfo.username}}"
+                    bindchange="onAccountChange"
+                    tips="{{usernameTip}}"
+                    status="error"
+                    clearable>
+                    <view slot="label" class="custom-label"> 用 户 名</view>
+                </t-input>
+
+                <t-input
+                    placeholder="请输入密码"
+                    type="password"
+                    value="{{formInfo.password}}"
+                    bindchange="onPasswordChange"
+                    tips="{{passwordTip}}"
+                    status="error"
+                    clearable>
+                    <view slot="label" class="custom-label">
+                        {{passwordText2}}</view
+                    >
+                </t-input>
+
+                <t-input
+                    placeholder="请再次输入密码"
+                    type="password"
+                    bindchange="onRepeatPasswordChange"
+                    tips="{{repeatPasswordTip}}"
+                    status="error"
+                    clearable>
+                    <view slot="label" class="custom-label">
+                        确认密码</view
+                    >
+                </t-input>
+            </view>
         </view>
-      </t-input>
+
+        <view wx:if="{{!isLogin}}" class="login__tips"
+            >注册验证通过后将自动登录</view
+        >
+
+        <t-radio-group
+            allow-uncheck
+            borderless
+            value="{{radioValue}}"
+            bind:change="onCheckChange">
+            <t-radio
+                label="同意《协议条款》"
+                value="agree"
+                t-class="radio-class"
+                t-class-icon="radio-class-icon"
+                t-class-label="radio-class-label" />
+        </t-radio-group>
+
+        <view class="login__button">
+            <t-button
+                wx:if="{{isLogin}}"
+                theme="primary"
+                size="large"
+                block
+                bindtap="login"
+                >登录</t-button
+            >
+            <t-button
+                wx:else
+                theme="primary"
+                size="large"
+                block
+                bindtap="register"
+                >注册并登录</t-button
+            >
+        </view>
+
+        <view class="login__password--forget" wx:if="{{isLogin}}">
+            <text>忘记密码？</text>
+            <t-link theme="primary" size="small">找回密码</t-link>
+        </view>
     </view>
 
-    <view wx:if="{{!isPasswordLogin}}" class="login__tips">未注册的手机号验证通过后将自动注册</view>
-
-    <t-radio-group allow-uncheck borderless value="{{radioValue}}" bind:change="onCheckChange">
-      <t-radio
-        label="同意《协议条款》"
-        value="agree"
-        t-class="radio-class"
-        t-class-icon="radio-class-icon"
-        t-class-label="radio-class-label"
-      />
-    </t-radio-group>
-
-    <view class="login__button">
-      <t-button theme="primary" size="large" block bindtap="login">
-        {{ isPasswordLogin ? '登录' : '验证并登录' }}
-      </t-button>
+    <view class="login__others">
+        <text class="login__others-label">其他方式</text>
+        <view class="login__others-buttons">
+            <t-button
+                class="button"
+                variant="outline"
+                theme="default"
+                size="medium"
+                shape="round"
+                bindtap="changeLogin">
+                {{isLogin ? '注册' : '登录' }}
+            </t-button>
+            <t-button
+                class="button"
+                variant="outline"
+                theme="default"
+                size="medium"
+                icon="logo-wechat-stroke"
+                shape="circle"></t-button>
+            <t-button
+                class="button"
+                variant="outline"
+                theme="default"
+                size="medium"
+                icon="logo-qq"
+                shape="circle"></t-button>
+            <t-button
+                class="button"
+                variant="outline"
+                theme="default"
+                size="medium"
+                icon="logo-wecom"
+                shape="circle"></t-button>
+        </view>
     </view>
-
-    <view class="login__password--forget" wx:if="{{isPasswordLogin}}">
-      <text>忘记密码？</text>
-      <t-link theme="primary" size="small">找回密码</t-link>
-    </view>
-  </view>
-
-  <view class="login__others">
-    <text class="login__others-label">其他方式</text>
-    <view class="login__others-buttons">
-      <t-button class="button" variant="outline" theme="default" size="medium" shape="round" bindtap="changeLogin">
-        {{isPasswordLogin ? '验证码登录' : '密码登录' }}
-      </t-button>
-      <t-button
-        class="button"
-        variant="outline"
-        theme="default"
-        size="medium"
-        icon="logo-wechat-stroke"
-        shape="circle"
-      ></t-button>
-      <t-button class="button" variant="outline" theme="default" size="medium" icon="logo-qq" shape="circle"></t-button>
-      <t-button
-        class="button"
-        variant="outline"
-        theme="default"
-        size="medium"
-        icon="logo-wecom"
-        shape="circle"
-      ></t-button>
-    </view>
-  </view>
 </view>

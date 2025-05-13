@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/my/index",
     "pages/home/index",
-    "pages/message/index",
-    "pages/my/index"
+    "pages/message/index"
   ],
   "usingComponents": {
     "t-toast": "tdesign-miniprogram/toast/toast",
@@ -11,6 +11,13 @@
   },
   "subpackages": [
     {
+        "root": "pages/diaryDetail",
+        "name": "diaryDetail",
+        "pages": [
+          "index"
+        ]
+      },
+    {
       "root": "pages/myDiary",
       "name": "myDiary",
       "pages": [
@@ -18,12 +25,12 @@
       ]
     },
     {
-        "root": "pages/editDiary",
-        "name": "editDiary",
-        "pages": [
-          "index"
-        ]
-      },
+      "root": "pages/editDiary",
+      "name": "editDiary",
+      "pages": [
+        "index"
+      ]
+    },
     {
       "root": "pages/search",
       "name": "search",

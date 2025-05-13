@@ -10,20 +10,15 @@ Page({
     data: {
         diary: {
             title: "",
-            content: "",
-            images: [],
-            tags: [],
+            content: ""
         },
-        originFiles: [
-
-        ],
+        originFiles: [],
         // 图片布局
         gridConfig: {
             column: 4,
             width: 160,
             height: 160,
         },
-        tags: ["风景", "饮食", "住宿", "交通"],
     },
     TitleChange(e) {
         this.setData({
@@ -36,14 +31,16 @@ Page({
         });
     },
     handleSuccess(e) {
-        const {
-            files
-        } = e.detail;
-        this.setData({
-            originFiles: files,
-        });
+        const {files} = e.detail;
+        if(files.length > 4){
+            console.log('上传内容不能超过4个')
+        }else{
+            this.setData({originFiles: files});
+        }
+        console.log(this.data.originFiles)
     },
     handleRemove(e) {
+        console.log('图片',this.data.originFiles)
         const {
             index
         } = e.detail;
@@ -58,42 +55,52 @@ Page({
     handleClick(e) {
         console.log(e.detail.file);
     },
-    // 获取当前位置
-    gotoMap() {
-        wx.showToast({
-            title: "获取当前位置...",
-            icon: "none",
-            image: "",
-            duration: 1500,
-            mask: false,
-            success: () => {},
-            fail: () => {},
-            complete: () => {},
-        });
-    },
     // 存入草稿箱
     saveDraft() {
         wx.reLaunch({
             url: `/pages/home/index?oper=save`,
         });
     },
-
+    formIsValid(){
+        const {title, content} = this.data.diary
+        console.log(content)
+        // return
+        const images = this.data.originFiles.filter(file=>file.type === 'image')
+        if(!images.length){
+            wx.showToast({
+                title: '请上传图片',
+                icon:'error'
+              })
+            return false
+        }
+        if(!title || !content){
+            wx.showToast({
+                title: '请完善游记信息',
+                icon:'error'
+              })
+            return false
+        }
+        return true
+    },
     // 发布
     async release() {
-        wx.showLoading({
-            title: "发布中...",
-            mask: true,
-        });
-
+        if(!this.formIsValid()) return
+        // wx.showLoading({
+        //     title: "发布中...",
+        //     mask: true,
+        // });
+        console.log('开始上传...')
+        console.log(this.data.originFiles)
         // 加入图片宽高
         const originFiles = await Promise.all(this.data.originFiles.map(async (file) => {
+            console.log('进入。。。。', file)
+            if(file.type === 'video') return file
             const dimension = await getImageDimension(file.url);
-            return {
-                file,
-                width: dimension.width,
-                height: dimension.height
-            };
+            file.width = dimension.width
+            file.height = dimension.height
+            return file
         }))
+        console.log('计算图片宽高：',originFiles)
 
         try {
             const userId = wx.getStorageSync('userId')
@@ -103,7 +110,7 @@ Page({
                     new Promise((resolve, reject) => {
                         wx.uploadFile({
                             url: 'http://localhost:3000/api/diary/upload',
-                            filePath: fileObj.file.url,
+                            filePath: fileObj.url,
                             name: 'photos',
                             formData: {
                                 userId: userId,
@@ -125,14 +132,24 @@ Page({
             );
 
             console.log('返回', uploadResults)
+            const images = uploadResults.filter(file => !/\.(mp4)$/i.test(file.url));
+            const videoResult = uploadResults.filter(file => /\.(mp4)$/i.test(file.url))[0];
+            const video = videoResult ? videoResult.url : undefined;
+            console.log('返回1', images)
+            console.log('返回2', video)
+
             // 2. 提交表单数据
             const formData = {
                 userId,
                 title: this.data.diary.title,
                 content: this.data.diary.content,
-                images: uploadResults,
+                images,
                 tags: this.data.tags
             };
+            // 只有当video不为undefined时才添加到formData中
+            if (video !== undefined) {
+                formData.video = video;
+            }
             console.log('sb2')
             console.log('formData', formData)
 

@@ -10,6 +10,7 @@ Component({
       value: 'title',
     },
     titleText: String,
+    searchShow: Boolean,
   },
   data: {
     value: '',

@@ -16,6 +16,11 @@ Component({
         label: '消息',
       },
       {
+        icon: 'add-rectangle',
+        value: 'release',
+        label: '发布',
+      },
+      {
         icon: 'user',
         value: 'my',
         label: '我的',
@@ -26,6 +31,7 @@ Component({
     ready() {
       const pages = getCurrentPages();
       const curPage = pages[pages.length - 1];
+
       if (curPage) {
         const nameRe = /pages\/(\w+)\/index/.exec(curPage.route);
         if (nameRe === null) return;
@@ -46,7 +52,22 @@ Component({
   methods: {
     handleChange(e) {
       const { value } = e.detail;
-      wx.switchTab({ url: `/pages/${value}/index` });
+      const userId = wx.getStorageSync('userId')
+
+      if(value !== 'my' && userId === ''){
+          wx.showToast({
+            title: '请先登录',
+            icon: 'error'
+          })
+          return
+      }
+      if(value === 'release'){
+          wx.navigateTo({
+            url: `/pages/${value}/index`,
+          })
+      }else{
+        wx.switchTab({ url: `/pages/${value}/index` });
+      }
     },
 
     /** 设置未读消息数量 */

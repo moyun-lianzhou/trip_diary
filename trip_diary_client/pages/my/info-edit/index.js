@@ -48,9 +48,7 @@ Page({
     },
 
     userInfoFieldChange(field, e) {
-        const {
-            value
-        } = e.detail
+        const {value} = e.detail
         this.setData({
             [`userInfo.${field}`]: value,
         });
@@ -109,6 +107,7 @@ Page({
         // 没有上传头像
         const photoList = this.data.photoList
         if (!photoList.length || photoList[0].url === this.data.userInfo.avatarUrl) {
+            console.log('提交的用户信息：',this.data.userInfo)
             request('/user/info', 'PUT', userInfo).then((res) => {
                 wx.showToast({
                     icon: 'success',
@@ -137,9 +136,8 @@ Page({
                 status: 'loading'
             }]
         });
-        const {
-            length
-        } = photoList;
+        console.log('提交的用户信息：',this.data.userInfo)
+        const {length} = photoList;
         wx.uploadFile({
             url: 'http://localhost:3000/api/user/info',
             formData: userInfo,

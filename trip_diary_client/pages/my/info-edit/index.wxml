@@ -1,9 +1,10 @@
 <t-navbar left-arrow title="个人信息" />
 
 <view class="info-edit">
-    <t-cell class="info-edit__cell" title="用户名">
-        <t-input disabled slot="note" value="{{userInfo.username}}"/>
-    </t-cell>
+    <view style="font-size: 30rpx;font-weight: bold;margin-bottom: 24rpx;margin-top: 24rpx;">
+        <text style="padding-left: 30rpx;">用户名</text>
+        <text style="margin-left: 88rpx;">{{userInfo.username}}</text>
+    </view>
 
     <t-cell bordered="{{false}}" class="info-edit__cell" title="头像">
         <image 
@@ -34,7 +35,7 @@
     </t-cell>
 
     <t-cell class="info-edit__cell" title="个性签名">
-        <t-textarea bind:blur="onTipChange" disableDefaultPadding="{{true}}" indicator maxcharacter="50" placeholder="请输入个性签名" slot="note" t-class="info-edit__tip" value="{{userInfo.tip}}" />
+        <t-textarea bind:change="onTipChange" disableDefaultPadding="{{true}}" indicator maxcharacter="50" placeholder="请输入个性签名" slot="note" t-class="info-edit__tip" value="{{userInfo.tip}}" />
     </t-cell>
 
 </view>
@@ -42,10 +43,3 @@
 <view class="info-edit__save">
     <t-button bind:tap="onSaveInfo" block size="medium" theme="primary">保存</t-button>
 </view>
-
-<t-date-time-picker auto-close bind:cancel="hidePicker" bind:change="onPickerChange" cancelBtn="取消" confirmBtn="确认" data-mode="birth" defaultValue="{{userInfo.birth}}" end="{{birthEnd}}" filter="{{birthFilter}}" format="YYYY-MM-DD" mode="date" popup-props="{{ { usingCustomNavbar: true } }}" start="{{birthStart}}" title="选择生日" value="{{userInfo.birth}}" visible="{{birthVisible}}" />
-
-<t-picker bind:cancel="hidePicker" bind:change="onPickerChange" bind:close="hidePicker" bind:pick="onAreaPick" cancelBtn="取消" confirmBtn="确认" data-mode="address" mode="address" title="选择地址" value="{{userInfo.address}}" visible="{{addressVisible}}">
-    <t-picker-item options="{{provinces}}" />
-    <t-picker-item options="{{cities}}" />
-</t-picker>

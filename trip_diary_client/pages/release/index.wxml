@@ -14,50 +14,36 @@
                 bind:sort-end="handleSortEnd"
                 max="4" />
         </view>
+
         <!-- 新增标题输入框 -->
-        <view class="title box">
+        <view class="title box separator" >
             <t-input
                 placeholder="请输入游记标题"
                 maxlength="20"
                 clearable
                 borderless
-                bind:change="TitleChange" />
+                value="{{diary.title}}"
+                bind:change="TitleChange" >
+                <view slot="label" class="custom-label"> 游记标题 </view>
+            </t-input>
         </view>
-        <view class="desc box">
-            <view class="desc-label">游记内容</view>
+
+
+        <view class="desc box separator">
             <t-textarea
                 t-class="desc-class"
                 t-class-textarea="placeholder-class"
+                value="{{diary.content}}"
                 placeholder="分享你此刻的想法"
                 maxlength="500"
                 disableDefaultPadding="{{true}}"
                 bind:change="ContentChange"
-                indicator />
+                space="pre-wrap"
+                indicator >
+                <view slot="label" class="custom-label">游记内容</view>
+            </t-textarea>
         </view>
-        <view class="taggroup box">
-            <t-cell
-                t-class-title="cell-title-class"
-                t-class-note="cell-note-class"
-                title="添加标签">
-                <block wx:for="{{tags}}" wx:key="index">
-                    <t-check-tag
-                        t-class="tag-class"
-                        size="medium"
-                        default-checked="{{index===0}}"
-                        variant="dark"
-                        content="#{{item}}"
-                        slot="note" />
-                </block>
-            </t-cell>
-        </view>
-        <view class="location box">
-            <t-cell
-                title="所在位置"
-                hover
-                arrow
-                leftIcon="location"
-                bindtap="gotoMap" />
-        </view>
+
         <view class="btngroup box">
             <t-button
                 t-class="btn-class"
@@ -65,14 +51,14 @@
                 icon="file-copy"
                 content="存草稿"
                 size="large"
-                bindtap="saveDraft"></t-button>
+                bindtap="saveDraft"/>
             <t-button
                 t-class="btn-class"
                 theme="primary"
                 icon="upload"
                 content="发布"
                 size="large"
-                bindtap="release"></t-button>
+                bindtap="release"/>
         </view>
     </view>
 </view>

@@ -25,7 +25,7 @@ function request(url, method = 'GET', data = {}) {
             header,
             success(res) {
                 // HTTP状态码为200才视为成功
-                if (res.statusCode === 200) {
+                if (res.statusCode === 200 || res.statusCode === 201) {
                     // console.log(res.data)
                     resolve(res.data.data);
                 } else {

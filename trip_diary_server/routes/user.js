@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../db/mongodb/models/User');
 // 导入上传中间件
-const uploadSinglePhoto = require('../middlewares/uploadSinglePhoto'); 
+const uploadSinglePhoto = require('../middlewares/uploadSingleFile'); 
 
 // 获取当前用户信息
 router.get('/info', async (req, res) => {

@@ -11,5 +11,6 @@
     "nav": "/components/nav",
     "card": "/components/card"
   },
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }

@@ -28,13 +28,13 @@ const storage = multer.diskStorage({
 const uploadMiddleware = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'video/mp4') {
             cb(null, true); // 接受文件
         } else {
-            cb(new Error('只允许上传 JPG 或 PNG 文件'), false); // 拒绝文件
+            cb(new Error('只允许上传 JPG/PNG/mp4 文件'), false); // 拒绝文件
         }
     },
-    limits: { fileSize: 20 * 1024 * 1024 } // 限制文件大小为 10MB
+    limits: { fileSize: 20 * 1024 * 1024 } // 限制文件大小为 20MB
 });
 
 

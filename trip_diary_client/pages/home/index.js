@@ -13,8 +13,6 @@ Page({
         loading: false, //是否展示 “正在加载” 字样
         loaded: false //是否展示 “已加载全部” 字样
     },
-    // 生命周期
-    async onReady() {},
     hasData(){
         return this.data.totalPages < this.data.currentPage ? false : true
     },
@@ -31,40 +29,14 @@ Page({
                 currentPage,
                 loading: false,
             });
-
             //如果列表数据条数小于总条数，隐藏 “正在加载” 字样，显示 “已加载全部” 字样
             if (diaries.length < this.data.pageSize) {
-                this.setData({
-                    loading: false,
-                    loaded: true,
-                });
+                this.setData({loading: false,loaded: true,});
             }
-            
             this.fetchData(); // 瀑布流
         } catch (err) {
             console.log(err);
         }
-    },
-    // 新增上拉加载处理
-    onReachBottom() {
-        console.log('上拉加载')
-        if(!this.hasData()){
-            console.log('数据加载完毕')
-            this.setData({
-                loading: false, //加载中
-                loaded: true //是否加载完所有数据
-            });
-            return
-        }
-
-        this.setData({
-            loading: true, //加载中
-            loaded: false //是否加载完所有数据
-        });
-        //延时调用接口
-        setTimeout(()=> {
-            this.initInfo();
-        }, 500)
     },
     fetchData() {
         // 模拟数据获取
@@ -96,11 +68,12 @@ Page({
         console.log('left', this.data.leftColumnData)
         console.log('right', this.data.rightColumnData)
     },
-    onLoad() {
-        this.initInfo();
-    },
-    onRefresh() {
-        
+
+    goDiaryDetail(event){
+        const diaryId = event.currentTarget.dataset.id; // 获取游记ID
+        wx.navigateTo({
+            url: `/pages/diaryDetail/index?diaryId=${diaryId}`,
+        });
     },
     goRelease() {
         wx.navigateTo({
@@ -121,4 +94,36 @@ Page({
         this.initInfo();
         this.setData({ isSearchMode: false });
     },
+    // 生命周期
+    onLoad() {
+        this.initInfo();
+        wx.stopPullDownRefresh() //刷新完成后停止下拉刷新动效
+    },
+    // 下拉刷新处理
+    onPullDownRefresh() {
+        wx.showNavigationBarLoading();
+        this.onLoad(); 
+    },
+     // 上拉加载处理
+     onReachBottom() {
+        console.log('上拉加载')
+        if(!this.hasData()){
+            console.log('数据加载完毕')
+            this.setData({
+                loading: false, //加载中
+                loaded: true //是否加载完所有数据
+            });
+            return
+        }
+
+        this.setData({
+            loading: true, //加载中
+            loaded: false //是否加载完所有数据
+        });
+        //延时调用接口
+        setTimeout(()=> {
+            this.initInfo();
+        }, 500)
+    },
+
 });

@@ -1,8 +1,10 @@
 <nav 
+    searchShow = "true"
     nav-type="search" 
     bind:searchComplete="handleSearchComplete"
     bind:actionHandle="resetData"
 />
+
 <view class="home-container">
     <view class="home-content">
         <t-tabs defaultValue="recommend">
@@ -11,11 +13,12 @@
                 <view class="waterfall-container">
                     <view class="waterfall-column">
                         <card
+                            bind:tap="goDiaryDetail"
+                            data-id="{{item._id}}"
                             wx:for="{{leftColumnData}}"
                             wx:key="_id"
                             title="{{item.title}}"
                             url="{{item.images[0].url}}"
-                            tags="{{item.tags}}"
                             avatarUrl="{{item.userInfo.avatarUrl}}"
                             nickname="{{item.userInfo.nickname}}"
                             width="{{item.images[0].width}}"
@@ -24,11 +27,12 @@
 
                     <view class="waterfall-column">
                         <card
+                        bind:tap="goDiaryDetail"
+                            data-id="{{item._id}}"
                             wx:for="{{rightColumnData}}"
                             wx:key="_id"
                             title="{{item.title}}"
                             url="{{item.images[0].url}}"
-                            tags="{{item.tags}}"
                             avatarUrl="{{item.userInfo.avatarUrl}}"
                             nickname="{{item.userInfo.nickname}}"
                             width="{{item.images[0].width}}"
@@ -45,7 +49,7 @@
                         wx:key="index"
                         desc="{{item.desc}}"
                         url="{{item.url}}"
-                        tags="{{item.tags}}" />
+                    />
                 </view>
             </t-tab-panel>
         </t-tabs>
@@ -59,7 +63,7 @@
 </view>
 
 
-<view class="home-release">
+<!-- <view class="home-release">
     <t-button
         theme="primary"
         size="large"
@@ -68,5 +72,5 @@
         bindtap="goRelease">
         发布
     </t-button>
-</view>
+</view> -->
 <t-message id="t-message" />

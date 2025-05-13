@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Diary = require('../db/mongodb/models/Diary');
-const uploadManyPhoto = require('../middlewares/uploadManyPhoto'); // 导入上传中间件
+const uploadManyFile = require('../middlewares/uploadManyFile'); // 导入上传中间件
 const User = require('../db/mongodb/models/User');
 
 // 获取所有人审核通过的游记列表-不分页
@@ -166,6 +166,10 @@ router.get('/detail', async (req, res) => {
             ...image,
             url: `${process.env.BASE_URL}/${diary.authorId.userId}/diary_photos/${image.url}`
         }));
+        // 处理视频URL
+        if(diary.video){
+            diary.video = `${process.env.BASE_URL}/${diary.authorId.userId}/diary_photos/${diary.video}`
+        }
         const userInfo = diary.authorId
         delete diary.authorId
 
@@ -335,9 +339,8 @@ router.get('/search', async (req, res) => {
 
 
 // 上传游记图片
-router.post('/upload', uploadManyPhoto.array('photos', 20), async (req, res) => {
+router.post('/upload', uploadManyFile.array('photos', 20), async (req, res) => {
     try {
-       
         const {width, height} = req.body;
         const files = req.files;
         console.log(width, height)
@@ -354,15 +357,16 @@ router.post('/upload', uploadManyPhoto.array('photos', 20), async (req, res) => 
 })
 
 // 创建游记
-router.post('/create', uploadManyPhoto.array('photos', 20),async (req, res) => {
+router.post('/create', uploadManyFile.array('photos', 20),async (req, res) => {
     try {
-        const { images, title, content, userId, tags } = req.body;
+        const { images, title, content, userId, video } = req.body;
+        console.log(content)
         const diary = new Diary({
             authorId: userId,
             title,
             content,
             images,
-            // tags: JSON.parse(tags),
+            video,
             status: 0
         });
 
@@ -380,7 +384,7 @@ router.post('/create', uploadManyPhoto.array('photos', 20),async (req, res) => {
 });
 
 // 更新游记
-router.put('/edit', uploadManyPhoto.array('photos', 20),async (req, res) => {
+router.put('/edit', uploadManyFile.array('photos', 20),async (req, res) => {
     try {
         const { title, content, images, diaryId, userId} = req.body;
         console.log(req.body)

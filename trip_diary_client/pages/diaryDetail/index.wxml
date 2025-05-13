@@ -1,0 +1,89 @@
+<!--pages/diaryDetail/index.wxml-->
+<t-navbar left-arrow>
+    <view slot="left" class="nav-content">
+        <t-image
+            src="{{diary.userInfo.avatarUrl}}"
+            shape="circle"
+            mode="aspectFill"
+            width="32"
+            height="32" />
+        <text class="nickname">{{diary.userInfo.nickname}}</text>
+    </view>
+</t-navbar>
+
+<view class="scroll-container">
+    <!-- 轮播图 -->
+    <swiper
+        class="detail-banner"
+        indicator-dots="{{indicatorDots}}"
+        autoplay="{{autoplay}}"
+        interval="{{interval}}"
+        duration="{{duration}}"
+        circular="{{circular}}"
+        indicator-color="{{beforeColor}}"
+        indicator-active-color="{{afterColor}}"
+        style="background: white">
+        <swiper-item wx:for="{{swiperList}}" wx:key="index">
+            <view bindtap="playbtn" wx:if="{{item.type==1}}">
+                <view class="videocoverbg"></view>
+                <image
+                    src="/static/img/play.png"
+                    class="playbtn"
+                    bindtap="videoPlay"
+                    hidden="{{controls}}"></image>
+            </view>
+
+            <view wx:if="{{item.type==1}}">
+                <video
+                    class="box-w block"
+                    id="myVideo"
+                    src="{{item.url}}"
+                    show-center-play-btn="{{false}}"
+                    autoplay="{{false}}"
+                    objectFit="cover"
+                    controls="{{controls}}"></video>
+            </view>
+
+            <image
+                wx:if="{{item.type==0}}"
+                class="banner-img"
+                src="{{item.url}}"
+                bindtap="previewImage"
+                data-src="{{item.url}}"
+                mode="aspectFill" />
+        </swiper-item>
+    </swiper>
+
+    <!-- 游记文字区 -->
+    <view class="text-container">
+        <!-- 标题 -->
+        <view class="title">{{diary.title}}</view>
+        <!-- 内容 -->
+        <view class="content">{{diary.content}}</view>
+        <view class="blank-container"></view>
+    </view>
+
+    <!-- 底部点赞、评论、收藏区 -->
+    <view class="footer-interaction">
+        <view class="like" bindtap="likeDiary">
+            <image src="/static/img/like{{liked ? '_active' : ''}}.png"></image>
+            <text>123{{likeCount}}</text>
+        </view>
+        <view class="comment" bindtap="goToComment">
+            <t-icon
+                name="chat"
+                size="32rpx"
+                data-name="{{item}}"
+                bind:click="onIconTap" />
+            <text>12{{commentCount}}</text>
+        </view>
+        <view class="collect" bindtap="collectDiary">
+            <image
+                src="/static/img/collect{{collected ? '_active' : ''}}.png"></image>
+            <text>11{{collectCount}}</text>
+        </view>
+        <view class="comment-container">
+            <view class="comment-text">发表你的意见</view>
+        </view>
+    </view>
+</view>

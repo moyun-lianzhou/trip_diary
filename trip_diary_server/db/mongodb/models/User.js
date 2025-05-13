@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 // 生成随机昵称，截取 UUID 前 4 位
 const generateRandomNickname = () => '用户_' + uuidv4().slice(0, 6); 
 
+
 // 生成随机昵称, 取时间戳后4位
 
 // 定义数据模型
@@ -11,12 +12,12 @@ const userSchema = new mongoose.Schema({
     openid: { // 微信openid
         type: String,
         required: true,
-        unique: true // 确保openId是唯一的
+        unique: true,   
     },
     username: { // 用户应用中的用户名
         type: String,
         required: true,
-        unique: true // 确保openId是唯一的
+        unique: true
     },
     password: { // 密码
         type: String,
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
     nickname: { // 微信昵称
         type: String,
         required: true,
-        unique: true, // 确保openId是唯一的
+        unique: true, 
         default: generateRandomNickname
     },
     avatarUrl: { // 头像URL

@@ -1,65 +1,77 @@
 .container {
-    padding: 12px;
+    padding: 24rpx;
     background-color: #f5f5f7;
     min-height: 100vh;
   }
-  
-  .diary-item {
+  .diary-container{
+    margin-bottom: 18rpx;
+    border-radius: 16rpx;
     background-color: #fff;
-    border-radius: 8px;
-    display: flex;
-    padding: 10px;
-    margin-bottom: 16px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .diary-content-container {
+    display: flex;
+    flex-direction: row;
+    padding: 24rpx;
   }
   
   .diary-image {
-    width: 100px;
-    height: 80px;
-    border-radius: 6px;
+    width: 225rpx;
+    height: 180rpx;
+    border-radius: 16rpx;
     object-fit: cover;
-    flex-shrink: 0;
   }
   
   .diary-content {
-    flex: 1;
-    margin-left: 14px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .text-content {
-    margin-bottom: 8px;
+    padding-right: 8rpx;
+    padding-top: 4rpx;
+    flex: 1;
+    flex-shrink: 1;
+    margin-left: 24rpx;
   }
   
   .diary-title {
-    font-size: 16px;
+    font-size: 28rpx;
     font-weight: 600;
     color: #222;
-    line-height: 22px;
   }
   
-  .diary-description {
-    font-size: 13px;
+  .diary-desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    font-size: 24rpx;
     color: #666;
-    line-height: 18px;
-    margin-top: 4px;
+    line-height: 36rpx;
+    max-height: 72rpx; /* 保证不超过 2 行高度 */
+  }
+
+  .diary-reject-desc{
+    text-overflow: ellipsis;
+    font-size: 13px;
+    color: red;
   }
   
   .action-bar {
     display: flex;
+    padding: 0rpx 24rpx;
+    padding-bottom: 24rpx;
     justify-content: space-between;
     align-items: center;
   }
   
   .status {
-    padding: 4px 10px;
-    border-radius: 14px;
-    font-size: 12px;
+    padding: 16rpx 12rpx;
+    border-radius: 16rpx;
+    font-size: 24rpx;
     color: #fff;
-    user-select: none;
-    width: 72px;
+    width: 128rpx;
     text-align: center;
   }
   
@@ -68,11 +80,12 @@
   }
   
   .status-pending {
-    background-color: #999999; /* 灰色 */
+    background-color: #b8b8b8; /* 灰色 */
   }
   
   .button-group {
     display: flex;
+    flex-direction: row;
     gap: 10px;
   }
   
@@ -81,9 +94,8 @@
     border: 1px solid #1890ff;
     background-color: #fff;
     color: #1890ff;
-    font-size: 14px;
-    padding: 4px 14px;
-    border-radius: 4px;
+    font-size: 24rpx;
+    border-radius: 16rpx;
   }
   
   .btn-delete {
@@ -92,26 +104,17 @@
   }
 
   .status-rejected {
-    background-color: #f44336; /* 红色背景 */
+    background-color: #f77167; /* 红色背景 */
     color: #fff; /* 白色文字 */
-    padding: 4px 10px;
-    border-radius: 14px;
-    font-size: 12px;
   }
 
-  .btn-publish {
-    background-color: #007aff; /* 蓝色背景 */
-    color: white; /* 白色文字 */
-    padding: 10px 15px;
-    border-radius: 5px;
-    margin-bottom: 10px; /* 与列表的间距 */
-    text-align: center;
-    font-size: 16px;
-  }
-
-  
   .custom-title {
     margin-left: 8rpx;
     font-size: 28rpx;
     font-weight: 400;
+  }
+  .go_release{
+    color: sky;
+    margin-left: 200rpx;
+    color: #1D7DFC;
   }

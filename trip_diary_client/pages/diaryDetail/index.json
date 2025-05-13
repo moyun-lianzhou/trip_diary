@@ -1,0 +1,10 @@
+{
+    "navigationStyle": "custom",
+    "usingComponents": {
+      "t-avatar": "tdesign-miniprogram/avatar/avatar",
+      "t-icon": "tdesign-miniprogram/icon/icon",
+      "t-image": "tdesign-miniprogram/image/image",
+      "t-navbar": "tdesign-miniprogram/navbar/navbar",
+      "t-search": "tdesign-miniprogram/search/search"
+    }
+}

@@ -4,34 +4,21 @@
         mode="aspectFill"
         width="340rpx"
         height="{{340/(width/height)}}rpx"
-        />
+    />
     <view class="home-card__info">
-        <text>{{title}}</text>
-        <view class="home-card__tag-group">
-            <t-tag
-                wx:for="{{tags}}"
-                wx:key="index"
-                size="small"
-                variant="light"
-                theme="{{item.theme}}"
-                >{{item.text}}</t-tag
-            >
-        </view>
+        <view class="home-card__title">{{title}}</view>
         <!-- 作者信息 -->
         <t-row class="home-card__author">
-            <t-col span="4"
-                ><t-image
+            <t-col span="4">
+                <t-image
                     src="{{avatarUrl}}"
                     width="24"
                     height="24"
                     shape="circle"
             /></t-col>
-            <t-col span="14"
-                ><text class="home-card__nickname" style="text-align: center"
-                    >{{nickname}}</text
-                ></t-col
-            >
-            <t-col span="5"><t-icon name="browse"></t-icon></t-col>
+            <t-col span="14">
+                <text class="home-card__nickname" style="text-align: center">{{nickname}}</text>
+            </t-col>
         </t-row>
     </view>
 </view>

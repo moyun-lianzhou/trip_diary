@@ -100,11 +100,18 @@ Page({
             url: `/pages/my/info-edit/index`
         });
     },
-
-    onEleClick(e) {
+    
+    goDiaryPage(e){
         const {status} = e.currentTarget.dataset.data;
         wx.navigateTo({
           url: `/pages/myDiary/index?status=${status}`,
+        })
+    },
+
+    onEleClick(e) {
+        wx.showToast({
+            title: e.currentTarget.dataset.data.name,
+            icon: 'none'
         })
     },
 });
