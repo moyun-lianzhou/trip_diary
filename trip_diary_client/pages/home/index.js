@@ -3,33 +3,42 @@ import request from "~/api/request";
 
 Page({
     data: {
+        searchMode: false,
         diaryList: [],
         leftColumnData: [],
         rightColumnData: [],
         isSearchMode: false,
         currentPage: 0,
-        pageSize: 6,
+        pageSize: 5,
         totalPages: 0,
         loading: false, //是否展示 “正在加载” 字样
         loaded: false //是否展示 “已加载全部” 字样
     },
     hasData(){
-        return this.data.totalPages < this.data.currentPage ? false : true
+        return !this.data.loaded;
     },
     // 初始化方法
-    async initInfo() {
+    async initInfo(isRefresh = false) {
+        if (this.data.loading) return; // 防止重复加载
+        this.setData({ loading: true });
+
         try {
             const {pages,currentPage, diaries}= await request("/diary/page", "GET", {
-                currentPage: this.data.currentPage + 1,
+                currentPage: isRefresh ? 1 : this.data.currentPage + 1,
                 limit: this.data.pageSize
             });
+
+            const newList = isRefresh ? diaries : [...this.data.diaryList, ...diaries];
+
             this.setData({
-                diaryList: [...this.data.diaryList, ...diaries],
+                diaryList: newList,
                 totalPages: pages,
                 currentPage,
-                loading: false,
+                loading: false
             });
-            //如果列表数据条数小于总条数，隐藏 “正在加载” 字样，显示 “已加载全部” 字样
+            console.log(this.data.currentPage, this.data.totalPages)
+
+            // 如果列表数据条数小于总条数，隐藏 “正在加载” 字样，显示 “已加载全部” 字样
             if (diaries.length < this.data.pageSize) {
                 this.setData({loading: false,loaded: true,});
             }
@@ -41,6 +50,7 @@ Page({
     fetchData() {
         // 模拟数据获取
         const allData = this.data.diaryList; // 你的数据
+        console.log(allData)
         
         // 分列逻辑
         const left = [];
@@ -83,14 +93,17 @@ Page({
     // 新增处理搜索完成的方法
     handleSearchComplete(e) {
         const diaries = e.detail.diaries;
+        this.data.searchMode = true
+        console.log('收到的数据：', diaries)
         this.setData({
             diaryList: diaries,
             isSearchMode: true
         });
+        console.log('页面数据：',this.data.diaryList)
         this.fetchData(); // 调用现有方法刷新视图
     },
      // 恢复原始数据的方法
-     resetData() {
+    resetData() {
         this.initInfo();
         this.setData({ isSearchMode: false });
     },
@@ -101,29 +114,31 @@ Page({
     },
     // 下拉刷新处理
     onPullDownRefresh() {
+        this.data.searchMode = false
         wx.showNavigationBarLoading();
-        this.onLoad(); 
+        // 使用 setData 正确重置状态
+        this.setData({
+            diaryList: [],
+            leftColumnData: [],
+            rightColumnData: [],
+            currentPage: 0,
+            totalPages: 0,
+            loading: false,
+            loaded: false,
+            isSearchMode: false
+        });
+        // 重新拉取第一页数据
+        this.initInfo(true).then(() => {
+            wx.hideNavigationBarLoading();
+            wx.stopPullDownRefresh(); // 结束下拉刷新动画
+        });
     },
      // 上拉加载处理
      onReachBottom() {
-        console.log('上拉加载')
-        if(!this.hasData()){
-            console.log('数据加载完毕')
-            this.setData({
-                loading: false, //加载中
-                loaded: true //是否加载完所有数据
-            });
-            return
+         if(this.data.searchMode) return
+        if(this.hasData()) {
+            this.initInfo(false);
         }
-
-        this.setData({
-            loading: true, //加载中
-            loaded: false //是否加载完所有数据
-        });
-        //延时调用接口
-        setTimeout(()=> {
-            this.initInfo();
-        }, 500)
     },
 
 });

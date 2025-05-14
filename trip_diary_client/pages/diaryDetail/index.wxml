@@ -82,6 +82,7 @@
                 src="/static/img/collect{{collected ? '_active' : ''}}.png"></image>
             <text>11{{collectCount}}</text>
         </view>
+
         <view class="comment-container">
             <view class="comment-text">发表你的意见</view>
         </view>

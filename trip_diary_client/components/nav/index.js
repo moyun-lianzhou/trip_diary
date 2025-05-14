@@ -136,7 +136,6 @@ Component({
       },
   
       actionHandle() {
-          console.log('sb')
         this.setData({
           value: '',
           actionText: '',
@@ -154,12 +153,7 @@ Component({
           }
           // 触发自定义事件传递数据
           this.triggerEvent('searchComplete', { diaries })
-          console.log(diaries)
+          console.log('传递的数据：',diaries)
       }
-    // searchTurn() {
-    //   wx.navigateTo({
-    //     url: `/pages/search/index`,
-    //   });
-    // },
   },
 });

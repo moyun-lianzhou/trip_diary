@@ -269,70 +269,85 @@ router.get('/my', async (req, res) => {
 
 // 搜索路由-根据keyWord模糊查询title和nickname
 router.get('/search', async (req, res) => {
-        // 先判断是否满足title模糊查询条件
-        // 在查询用户集合，判断keyWord是否在nickname中
-        try {
-            const { keyWord, page = 1, limit = 10 } = req.query;
-            
-            if (!keyWord) {
-                return res.status(400).send({
-                    code: 400,
-                    message: '缺少搜索关键词'
-                });
-            }
-    
-            // 1. 查询标题匹配的游记
-            const titleDiaries = await Diary.find({
-                title: { $regex: keyWord, $options: 'i' },
-                status: 1,
-                isDeleted: false
-            });
-    
-            // 2. 查询昵称匹配的用户
-            const users = await User.find({
-                nickname: { $regex: keyWord, $options: 'i' }
-            });
-            
-            // 3. 获取这些用户的游记
-            const userDiaries = await Diary.find({
-                authorId: { $in: users.map(u => u._id) },
-                status: 1,
-                isDeleted: false
-            });
-    
-            // 合并结果并去重
-            const allDiaries = [...titleDiaries, ...userDiaries];
-            const uniqueDiaries = [...new Map(allDiaries.map(diary => 
-                [diary._id.toString(), diary])).values()];
-    
-            // 分页处理
-            const start = (page - 1) * limit;
-            const end = start + limit;
-            const pagedDiaries = uniqueDiaries.slice(start, end);
-    
-            // 处理图片URL
-            pagedDiaries.forEach(diary => {
-                const authorId = diary.authorId;
-                diary.images = diary.images.map(image => {
-                    image.url = `${process.env.BASE_URL}/${authorId}/diary_photos/${image.url}`;
-                    return image;
-                });
-            });
-    
-            res.send({
-                code: 200,
-                data: {
-                    total: uniqueDiaries.length,
-                    diaries: pagedDiaries
-                }
-            });
-        } catch (error) {
-            console.error('搜索失败:', error);
-            res.status(500).send({
-                code: 500,
-                message: '服务器内部错误'
+    try {
+        const { keyWord } = req.query;
+        
+        if (!keyWord) {
+            return res.status(400).send({
+                code: 400,
+                message: '缺少搜索关键词'
             });
         }
+
+        // 1. 查询标题匹配的游记（带用户信息）
+        const titleDiaries = await Diary.find({
+            title: { $regex: keyWord, $options: 'i' },
+            status: 1,
+            isDeleted: false
+        }).populate({
+            path: 'authorId',
+            select: 'nickname avatarUrl',
+            transform: doc => ({
+                userId: doc._id,
+                nickname: doc.nickname,
+                avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+            })
+        });
+
+        // 2. 查询昵称匹配的用户
+        const users = await User.find({
+            nickname: { $regex: keyWord, $options: 'i' }
+        });
+        
+        // 3. 获取这些用户的游记（带用户信息）
+        const userDiaries = await Diary.find({
+            authorId: { $in: users.map(u => u._id) },
+            status: 1,
+            isDeleted: false
+        }).populate({
+            path: 'authorId',
+            select: 'nickname avatarUrl',
+            transform: doc => ({
+                userId: doc._id,
+                nickname: doc.nickname,
+                avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+            })
+        });
+
+        // 合并结果并去重
+        const allDiaries = [...titleDiaries, ...userDiaries];
+        const uniqueDiaries = [...new Map(allDiaries.map(diary => 
+            [diary._id.toString(), diary])).values()];
+
+        // 转换数据结构
+        const processedDiaries = uniqueDiaries.map(diary => {
+            const userInfo = diary.authorId;
+            delete diary.authorId;
+            
+            return {
+                ...diary.toObject(),
+                userInfo,
+                images: diary.images.map(image => ({
+                    ...image.toObject(),
+                    url: `${process.env.BASE_URL}/${userInfo.userId}/diary_photos/${image.url}`
+                }))
+            };
+        });
+
+        res.send({
+            code: 200,
+            data: {
+                total: processedDiaries.length,
+                diaries: processedDiaries
+            }
+        });
+    } catch (error) {
+        console.error('搜索失败:', error);
+        res.status(500).send({
+            code: 500,
+            message: '服务器内部错误'
+        });
+    }
 });
 
 

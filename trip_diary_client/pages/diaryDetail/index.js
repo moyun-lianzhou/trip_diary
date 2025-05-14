@@ -35,11 +35,7 @@ Page({
             controls: true,
         });
     },
-    onLoad: function (options) {
-        // TODO: 根据传入的 diaryId 获取游记详情
-        const { diaryId } = options;
-        this.getDiaryDetail(diaryId);
-    },
+    
 
     async getDiaryDetail(diaryId) {
         const { diary } = await request("/diary/detail", "GET", { diaryId });
@@ -60,7 +56,22 @@ Page({
         }
         
         console.log('swipperList:',this.data.swiperList)
-    }
+    },
+    // 生命周期
+    onLoad: function (options) {
+        wx.showShareMenu(); // 启用分享功能
+        // TODO: 根据传入的 diaryId 获取游记详情
+        const { diaryId } = options;
+        this.getDiaryDetail(diaryId);
+    },
+
+    onShareAppMessage() {
+        return {
+            title: '这是分享的标题',
+            path: '/pages/home/index', // 要分享的页面路径
+            imageUrl: '/images/share.png', // 可选：自定义图片
+          };
+      },
 
 });
 

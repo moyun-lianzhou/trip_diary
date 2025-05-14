@@ -52,8 +52,12 @@ Page({
                 name: '设置',
                 icon: 'setting',
                 type: 'setting',
-                url: '/pages/setting/index'
             },
+            {
+                name: '退出登录',
+                icon: 'poweroff',
+                type: 'logout'
+            }
         ],
     },
     onChooseAvatar(e) {
@@ -109,9 +113,38 @@ Page({
     },
 
     onEleClick(e) {
-        wx.showToast({
-            title: e.currentTarget.dataset.data.name,
-            icon: 'none'
-        })
+        const { type, name } = e.currentTarget.dataset.data;
+
+            if (type === 'logout') {
+                wx.showModal({
+                    title: '提示',
+                    content: '确定要退出登录吗？',
+                    confirmText: '退出',
+                    success: (res) => {
+                        if (res.confirm) {
+                            wx.removeStorageSync('auth_token');
+                            wx.removeStorageSync('userId');
+                            this.setData({
+                                isLogin: false,
+                                userInfo: {
+                                    username: '',
+                                    nickname: '未登录',
+                                    avatarUrl: '/static/default_avatar.png',
+                                    tip: '用户太懒，暂无介绍',
+                                    gender: 0,
+                                    city: '未知'
+                                }
+                            });
+                        }
+                    }
+                });
+            } else if (url) {
+                wx.navigateTo({ url });
+            } else {
+                wx.showToast({
+                    title: name,
+                    icon: 'none'
+                });
+            }
     },
 });
