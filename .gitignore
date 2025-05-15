@@ -6,4 +6,5 @@ trip_diary_client/.prettierrc
 
 trip_diary_server/node_modules/
 trip_diary_server/upload/
+trip_diary_server/.env
 

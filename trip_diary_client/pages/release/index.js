@@ -1,8 +1,8 @@
 // pages/release/index.js
-import {
-    getImageDimension
-} from "~/utils/getImageDimension"
+import {getImageDimension} from "~/utils/getImageDimension"
+import config from '~/config';
 import request from '~/api/request';
+const {baseUrl} = config;
 Page({
     /**
      * 页面的初始数据
@@ -109,7 +109,7 @@ Page({
                 originFiles.map(fileObj =>
                     new Promise((resolve, reject) => {
                         wx.uploadFile({
-                            url: 'http://localhost:3000/api/diary/upload',
+                            url: `${baseUrl}/diary/upload`,
                             filePath: fileObj.url,
                             name: 'photos',
                             formData: {

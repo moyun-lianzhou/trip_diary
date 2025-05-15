@@ -71,11 +71,6 @@ Page({
 
     // 编辑游记
     async editDiary() {
-        wx.showLoading({
-            title: "编辑中...",
-            mask: true,
-        });
-
         try {
             const userId = wx.getStorageSync('userId')
             const diaryId = this.data.diary.diaryId
@@ -95,9 +90,9 @@ Page({
                     icon: "success"
                 });
                 console.log(this.data.status)
-                setTimeout(() => wx.reLaunch({
-                  url: `/pages/myDiary/index?status=${this.data.status}`,
-                }), 1500);
+                setTimeout(() => {
+                    wx.navigateBack();
+                }, 1000);
            
         } catch (err) {
             console.log(err)
