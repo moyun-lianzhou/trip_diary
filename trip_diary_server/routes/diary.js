@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
                 transform: doc => ({
                     userId: doc._id,
                     nickname: doc.nickname,
-                    avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+                    avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
                 })
             })
             .lean();
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
                 userInfo,
                 images: diary.images.map(image => ({
                     ...image,
-                    url: `${process.env.BASE_URL}/${userInfo.userId}/diary_photos/${image.url}`
+                    url: `${process.env.IMAGEURL}/${userInfo.userId}/diary_photos/${image.url}`
                 }))
             };
         });
@@ -74,7 +74,7 @@ router.get('/page', async (req, res) => {
             transform: doc => ({
                 userId: doc._id,
                 nickname: doc.nickname,
-                avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+                avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
             })
         })
         .lean();
@@ -88,7 +88,7 @@ router.get('/page', async (req, res) => {
         //     transform: doc => ({
         //         userId: doc._id,
         //         nickname: doc.nickname,
-        //         avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+        //         avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
         //     })
         // })
         // .lean();
@@ -100,7 +100,7 @@ router.get('/page', async (req, res) => {
             const authorId = diary.authorId.userId;
             delete diary.authorId;
             diary.images = diary.images.map(image => {
-                image.url = `${process.env.BASE_URL}/${authorId}/diary_photos/${image.url}`;
+                image.url = `${process.env.IMAGEURL}/${authorId}/diary_photos/${image.url}`;
                 return image;
             });
             diary.userInfo = userInfo;
@@ -148,7 +148,7 @@ router.get('/detail', async (req, res) => {
                 transform: doc => ({
                     userId: doc._id,
                     nickname: doc.nickname,
-                    avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+                    avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
                 })
             })
             .lean();
@@ -164,11 +164,11 @@ router.get('/detail', async (req, res) => {
         // 处理图片URL
         diary.images = diary.images.map(image => ({
             ...image,
-            url: `${process.env.BASE_URL}/${diary.authorId.userId}/diary_photos/${image.url}`
+            url: `${process.env.IMAGEURL}/${diary.authorId.userId}/diary_photos/${image.url}`
         }));
         // 处理视频URL
         if(diary.video){
-            diary.video = `${process.env.BASE_URL}/${diary.authorId.userId}/diary_photos/${diary.video}`
+            diary.video = `${process.env.IMAGEURL}/${diary.authorId.userId}/diary_photos/${diary.video}`
         }
         const userInfo = diary.authorId
         delete diary.authorId
@@ -236,7 +236,7 @@ router.get('/my', async (req, res) => {
                 userInfo,
                 images: diary.images.map(image => ({
                     ...image,
-                    url: `${process.env.BASE_URL}/${userInfo.userId}/diary_photos/${image.url}`
+                    url: `${process.env.IMAGEURL}/${userInfo.userId}/diary_photos/${image.url}`
                 }))
             };
         });
@@ -290,7 +290,7 @@ router.get('/search', async (req, res) => {
             transform: doc => ({
                 userId: doc._id,
                 nickname: doc.nickname,
-                avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+                avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
             })
         });
 
@@ -310,7 +310,7 @@ router.get('/search', async (req, res) => {
             transform: doc => ({
                 userId: doc._id,
                 nickname: doc.nickname,
-                avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+                avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
             })
         });
 
@@ -329,7 +329,7 @@ router.get('/search', async (req, res) => {
                 userInfo,
                 images: diary.images.map(image => ({
                     ...image.toObject(),
-                    url: `${process.env.BASE_URL}/${userInfo.userId}/diary_photos/${image.url}`
+                    url: `${process.env.IMAGEURL}/${userInfo.userId}/diary_photos/${image.url}`
                 }))
             };
         });
@@ -455,14 +455,14 @@ router.put('/edit', uploadManyFile.array('photos', 20),async (req, res) => {
             transform: doc => ({
                 userId: doc._id,
                 nickname: doc.nickname,
-                avatarUrl: `${process.env.BASE_URL}/${doc._id}/avatar/${doc.avatarUrl}`
+                avatarUrl: `${process.env.IMAGEURL}/${doc._id}/avatar/${doc.avatarUrl}`
             })
         }).lean();
 
         // 处理图片URL
         updatedDiary.images = updatedDiary.images.map(image => ({
             ...image,
-            url: `${process.env.BASE_URL}/${updatedDiary.authorId._id}/diary_photos/${image.url}`
+            url: `${process.env.IMAGEURL}/${updatedDiary.authorId._id}/diary_photos/${image.url}`
         }));
 
         res.json({

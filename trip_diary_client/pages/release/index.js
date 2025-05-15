@@ -163,7 +163,7 @@ Page({
                 });
 
                 setTimeout(() => wx.reLaunch({
-                    url: "/pages/home/index"
+                    url: `/pages/myDiary/index?status=3`
                 }), 2000);
            
         } catch (err) {

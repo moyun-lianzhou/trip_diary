@@ -23,7 +23,7 @@ router.get('/info', async (req, res) => {
                 message: '未找到该用户'
             });
         }
-        const baseUrl = `http://${process.env.HOST}:${process.env.PORT}/`
+        const baseUrl = `${process.env.IMAGEURL}`
         let avatarUrl = ''
         if(user.avatarUrl !== '/images/default_avatar.png'){
             avatarUrl = baseUrl + `/${userId}/avatar/${user.avatarUrl}`;

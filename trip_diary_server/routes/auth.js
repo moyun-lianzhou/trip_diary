@@ -71,6 +71,7 @@ router.post('/register', async (req, res) => {
 // 用户登录（账号密码）
 router.post('/login', async (req, res) => {
     try {
+        console.log(req.body)
         const { username, password } = req.body.formInfo;
 
         console.log(username, password);
